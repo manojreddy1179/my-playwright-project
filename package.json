@@ -5,10 +5,14 @@
   "scripts": {
     "test": "npx playwright test",
     "test:headed": "npx playwright test --headed",
-    "test:debug": "npx playwright test --debug"
+    "test:debug": "npx playwright test --debug",
+    "test:api": "npx playwright test tests/api",
+    "test:db": "npx playwright test tests/db"
   },
   "devDependencies": {
     "@playwright/test": "^1.62.0",
+    "@types/pg": "^8.20.0",
+    "pg": "^8.22.0",
     "ts-node": "^10.9.2",
     "typescript": "^7.0.2"
   }
