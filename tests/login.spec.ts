@@ -1,9 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { writeFileSync } from 'fs';
-import path from 'path';
 import { LoginPage } from '../src/pageObjects/LoginPage';
-import { HomePage } from '../src/pageObjects/HomePage';
-import { BASE_URL, DEFAULT_TIMEOUT } from '../src/config';
+import { BASE_URL } from '../src/config';
 import loginData from './data/loginData.json';
 
 test('login flow: email and password pages', async ({ page }) => {

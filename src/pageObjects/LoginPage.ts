@@ -1,8 +1,8 @@
 import { Locator, Page } from '@playwright/test';
-import { BasePage } from './BasePage';
+import { AuthBasePage } from './AuthBasePage';
 import { PasswordPage } from './PasswordPage';
 
-export class LoginPage extends BasePage {
+export class LoginPage extends AuthBasePage {
   constructor(page: Page) {
     super(page);
   }
@@ -19,24 +19,16 @@ export class LoginPage extends BasePage {
     return this.page.locator('#continue');
   }
 
-  get forgotPasswordLink(): Locator {
-    return this.page.locator('#ForgotPassword');
-  }
-
-  get createAccountLink(): Locator {
-    return this.page.locator('#createAccount');
-  }
-
   get pageErrors(): Locator {
     return this.page.locator('#errors .error-container');
   }
 
   async fillEmail(value: string) {
-    await this.email.fill(value);
+    await this.fill(this.email, value);
   }
 
   async clickContinue() {
-    await this.continueButton.click();
+    await this.click(this.continueButton);
   }
 
   async continueToPasswordPage(): Promise<PasswordPage> {

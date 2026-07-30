@@ -1,7 +1,7 @@
 import { Locator, Page } from '@playwright/test';
-import { BasePage } from './BasePage';
+import { AuthBasePage } from './AuthBasePage';
 
-export class PasswordPage extends BasePage {
+export class PasswordPage extends AuthBasePage {
   constructor(page: Page) {
     super(page);
   }
@@ -26,23 +26,15 @@ export class PasswordPage extends BasePage {
     return this.page.locator('#continue');
   }
 
-  get forgotPasswordLink(): Locator {
-    return this.page.locator('#ForgotPassword');
-  }
-
-  get createAccountLink(): Locator {
-    return this.page.locator('#createAccount');
-  }
-
   get errorMessages(): Locator {
     return this.page.locator('#errors .error-container:visible, #b2cErrors .error.itemLevel:visible');
   }
 
   async fillPassword(value: string) {
-    await this.passwordInput.fill(value);
+    await this.fill(this.passwordInput, value);
   }
 
   async clickLogin() {
-    await this.loginButton.click();
+    await this.click(this.loginButton);
   }
 }
