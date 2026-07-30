@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { LoginPage } from '../src/pageObjects/LoginPage';
-import { BASE_URL } from '../src/config';
+import { LoginPage } from '../../src/pageObjects/LoginPage';
+import { BASE_URL } from '../../src/config';
 import loginData from './data/loginData.json';
 
 test('login flow: email and password pages', async ({ page }) => {

@@ -7,20 +7,25 @@ export default defineConfig({
   expect: {
     timeout: DEFAULT_TIMEOUT
   },
+  reporter: [
+    ['list'],
+    ['allure-playwright', { outputFolder: 'allure-results' }]
+  ],
   use: {
     headless: false,
     baseURL: BASE_URL,
     viewport: null,
     launchOptions: {
-      args: ['--start-fullscreen']
+      args: ['--start-maximized']
     },
     actionTimeout: DEFAULT_TIMEOUT,
-    trace: 'on-first-retry'
+    screenshot: 'only-on-failure',
+    trace: 'retain-on-failure'
   },
   projects: [
     {
       name: 'chrome',
-      use: { channel: 'chrome', ...devices['Desktop Chrome'] }
+      use: { channel: 'chrome'}
     }
   ]
 });

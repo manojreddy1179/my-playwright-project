@@ -1,0 +1,48 @@
+name: CI - Allure tests with S3-backed history
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+env:
+  ALLURE_RESULTS: allure-results
+  ALLURE_REPORT: allure-report
+
+jobs:
+  test-and-sync-history:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Try download previous Allure history from S3 (Node helper)
+        run: |
+          npm ci --no-audit --no-fund
+          node ./scripts/s3-allure-sync.js download || true
+          node ./scripts/unzip-allure-history.js || true
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run E2E tests (produce allure-results)
+        run: npx playwright test tests/e2e --reporter=list,allure-playwright
+
+      - name: Generate Allure report
+        run: |
+          # copy previous report history into results (defensive)
+          node ./scripts/preserve-allure-history.js || true
+          npx allure generate $ALLURE_RESULTS -o $ALLURE_REPORT || true
+
+      - name: Zip and upload new Allure history to S3 (Node helper)
+        run: |
+          npm ci --no-audit --no-fund
+          npm run allure:zip-history || true
+          node ./scripts/s3-allure-sync.js upload || true

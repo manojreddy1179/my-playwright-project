@@ -1,0 +1,64 @@
+name: CI - Allure tests with history
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  test-and-preserve-allure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Restore previous Allure history (if any)
+        uses: actions/github-script@v6
+        id: fetch-artifact
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const branch = context.ref.replace('refs/heads/', '');
+            // List workflow runs for this repo/branch
+            const runs = await github.rest.actions.listWorkflowRunsForRepo({ owner, repo, branch, per_page: 20 });
+            const successful = runs.data.workflow_runs.find(r => r.conclusion === 'success' && r.head_branch === branch);
+            if (!successful) {
+              core.info('No previous successful workflow run found. Skipping artifact download.');
+              return { url: null };
+            }
+            // List artifacts for that run
+            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({ owner, repo, run_id: successful.id });
+            const artifact = artifacts.data.artifacts.find(a => a.name === 'allure-report-history');
+            if (!artifact) {
+              core.info('No allure-report-history artifact found in previous run.');
+              return { url: null };
+            }
+            // Get the archive download url
+            const download = await github.rest.actions.downloadArtifact({ owner, repo, artifact_id: artifact.id, archive_format: 'zip' });
+            // The actions toolkit downloadArtifact returns a redirect; we will reconstruct the API URL for curl
+            return { url: artifact.archive_download_url };
+
+      - name: Download and extract previous history
+        if: steps.fetch-artifact.outputs.url != ''
+        run: |
+          echo "Downloading previous Allure history..."
+          URL="${{ steps.fetch-artifact.outputs.url }}"
+          # Use GITHUB_TOKEN for auth
+          curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -o history.zip "$URL"
+          mkdir -p allure-report/history
+          unzip -o history.zip -d allure-report/history || true
+
+      - name: Install dependencies
+        run: |
+          npm ci
+
+      - name: Run E2E tests and generate Allure report
+        run: |
+          npm run test:e2e:allure
+
+      - name: Upload updated Allure history
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report-history
+          path: allure-report/history
