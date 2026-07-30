@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "test": "npx playwright test",
-    "test:headed": "npx playwright test --headed",
-    "test:debug": "npx playwright test --debug",
+    "test:e2e": "npx playwright test tests/e2e",
     "test:api": "npx playwright test tests/api",
-    "test:db": "npx playwright test tests/db"
+    "test:db": "npx playwright test tests/db",
+    "test:headed": "npx playwright test --headed",
+    "test:debug": "npx playwright test --debug"
   },
   "devDependencies": {
     "@playwright/test": "^1.62.0",
