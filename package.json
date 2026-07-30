@@ -4,16 +4,19 @@
   "private": true,
   "scripts": {
     "test": "npx playwright test",
-    "test:e2e": "npx playwright test tests/e2e",
-    "test:api": "npx playwright test tests/api",
-    "test:db": "npx playwright test tests/db",
     "test:headed": "npx playwright test --headed",
-    "test:debug": "npx playwright test --debug"
+    "test:debug": "npx playwright test --debug",
+    "test:api": "npx playwright test tests/api",
+    "test:db": "npx playwright test tests/db"
   },
   "devDependencies": {
+    "@aws-sdk/client-s3": "^3.0.0",
     "@playwright/test": "^1.62.0",
     "@types/pg": "^8.20.0",
+    "allure-commandline": "^2.23.0",
+    "allure-playwright": "^2.0.0",
     "pg": "^8.22.0",
+    "rimraf": "^5.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^7.0.2"
   }

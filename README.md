@@ -9,35 +9,22 @@ npm install
 npx playwright install
 ```
 
-## Test folders
-
-- `tests/e2e/` — UI end-to-end tests
-- `tests/api/` — API tests
-- `tests/db/` — Database tests
-- `src/pageObjects/` — Page object models
-- `src/api/` — API helper classes
-- `src/db/` — Database helper classes
-
-## Run tests
+Run tests
 
 ```powershell
 npm test
-npm run test:e2e
-npm run test:api
-npm run test:db
+# or run headed
 npm run test:headed
 npm run test:debug
 ```
 
-## Example commands
+Run specific tests
 
 ```powershell
-npm run test:e2e -- --project=chrome
-npm run test:api
-npm run test:db
+npx playwright test tests/login.spec.ts --project=chrome
 ```
 
-## Files
+Files
 
 - [package.json](package.json)
 - [tsconfig.json](tsconfig.json)
