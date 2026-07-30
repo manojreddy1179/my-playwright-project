@@ -1,21 +1,26 @@
 import { defineConfig, devices } from '@playwright/test';
+import { BASE_URL, DEFAULT_TIMEOUT } from './src/config';
 
 export default defineConfig({
   testDir: 'tests',
-  timeout: 30_000,
+  timeout: DEFAULT_TIMEOUT,
   expect: {
-    timeout: 5000
+    timeout: DEFAULT_TIMEOUT
   },
   use: {
-    headless: true,
-    viewport: { width: 1280, height: 720 },
-    actionTimeout: 10_000,
+    headless: false,
+    baseURL: BASE_URL,
+    viewport: null,
+    launchOptions: {
+      args: ['--start-fullscreen']
+    },
+    actionTimeout: DEFAULT_TIMEOUT,
     trace: 'on-first-retry'
   },
   projects: [
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] }
+      name: 'chrome',
+      use: { channel: 'chrome', ...devices['Desktop Chrome'] }
     }
   ]
 });

@@ -18,9 +18,16 @@ npm test
 npm run test:headed
 ```
 
+Run specific tests
+
+```powershell
+npx playwright test tests/login.spec.ts --project=chrome
+```
+
 Files
 
 - [package.json](package.json)
 - [tsconfig.json](tsconfig.json)
 - [playwright.config.ts](playwright.config.ts)
-- [tests/example.spec.ts](tests/example.spec.ts)
+- [tests/login.spec.ts](tests/login.spec.ts)
+ 
